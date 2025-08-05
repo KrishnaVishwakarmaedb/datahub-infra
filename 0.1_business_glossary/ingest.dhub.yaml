@@ -1,0 +1,10 @@
+source:
+  type: datahub-business-glossary
+  config:
+    file: 0.1_business_glossary/glossary.dhub.yaml
+
+sink:
+  type: "datahub-rest"
+  config:
+    server: "http://3.12.238.200"
+    token : "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0VSIiwiYWN0b3JJZCI6ImRhdGFodWIiLCJ0eXBlIjoiUEVSU09OQUwiLCJ2ZXJzaW9uIjoiMiIsImp0aSI6ImFiZGNlZDM1LWI3NzAtNDdkMS1hMTk5LTY5OTBjY2M4MmM3MCIsInN1YiI6ImRhdGFodWIiLCJpc3MiOiJkYXRhaHViLW1ldGFkYXRhLXNlcnZpY2UifQ.5oXzKtyXVUQbQOggMi2fH5O3EZJMtxzji1Oh-3VW9HM"

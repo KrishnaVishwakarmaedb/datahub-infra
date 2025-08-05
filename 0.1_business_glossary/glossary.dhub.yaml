@@ -1,0 +1,85 @@
+source: DataHub
+version: "1"
+owners:
+  users:
+    - datahub
+nodes:
+  - name: Classification
+    description: A set of terms related to Data Classification
+    knowledge_links:
+      - label: Wiki link for classification
+        url: "https://en.wikipedia.org/wiki/Classification"
+    custom_properties:
+      is_confidential: "true"
+    terms:
+      - name: NotSensitive
+        description: NotSensitive Data
+        custom_properties:
+          is_confidential: "false"
+      - name: Sensitive
+        description: Sensitive Data
+        custom_properties:
+          is_confidential: "false"
+      - name: Confidential
+        description: Confidential Data
+        custom_properties:
+          is_confidential: "true"
+      - name: HighlyConfidential
+        description: Highly Confidential Data
+        custom_properties:
+          is_confidential: "true"
+  - name: PersonalInformation
+    description: All terms related to personal information
+    owners:
+      users:
+        - mjames
+    terms:
+      - name: Email
+        ## An example of using an id to pin a term to a specific guid
+        # id: "urn:li:glossaryTerm:41516e310acbfd9076fffc2c98d2d1a3"
+        description: An individual's email address
+        inherits:
+          - Classification.Confidential
+        owners:
+          groups:
+            - Trust and Safety
+      - name: Address
+        description: A physical address
+      - name: Gender
+        description: The gender identity of the individual
+        inherits:
+          - Classification.Sensitive
+  - name: Shipping
+    description: Provides terms related to the shipping domain
+    owners:
+      users:
+        - njones
+      groups:
+        - logistics
+    terms:
+      - name: FullAddress
+        description: A collection of information to give the location of a building or plot of land.
+        owners:
+          users:
+            - njones
+          groups:
+            - logistics
+        term_source: "EXTERNAL"
+        source_ref: FIBO
+        source_url: "https://www.google.com"
+        inherits:
+          - Privacy.PII
+        contains:
+          - Shipping.ZipCode
+          - Shipping.CountryCode
+          - Shipping.StreetAddress
+        custom_properties:
+          is_used_for_compliance_tracking: "true"
+        knowledge_links:
+          - url: "https://en.wikipedia.org/wiki/Address"
+            label: Wiki link
+        domain: "urn:li:domain:Logistics"
+    knowledge_links:
+      - label: Wiki link for shipping
+        url: "https://en.wikipedia.org/wiki/Freight_transport"
+  
