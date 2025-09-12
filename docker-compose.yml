@@ -28,12 +28,9 @@ services:
     volumes:
       # Mount the DIRECT nginx.conf file
       - ./nginx-datahub/nginx.conf:/etc/nginx/nginx.conf:ro
-      # Mount your self-signed certificates and key into the container
-      - ./certs/datahub-selfsigned.crt:/etc/nginx/ssl/datahub-selfsigned.crt:ro
-      - ./certs/datahub-selfsigned.key:/etc/nginx/ssl/datahub-selfsigned.key:ro
-    # No environment variables for DOMAIN needed here as it's hardcoded in nginx.conf
-    # environment:
-    #   - DOMAIN=3.12.238.200 # REMOVED OR COMMENTED OUT
+      
+      - ./certs/dgov-prod-awsuse1-1.edbcorp.net.crt:/etc/nginx/ssl/dgov-prod-awsuse1-1.edbcorp.net.crt:ro
+      - ./certs/dgov-prod-awsuse1-1.edbcorp.net.key:/etc/nginx/ssl/dgov-prod-awsuse1-1.edbcorp.net.key:ro
     depends_on:
       datahub-frontend-react:
         condition: service_healthy
@@ -112,13 +109,20 @@ services:
       - DATAHUB_TRACKING_TOPIC=DataHubUsageEvent_v1
       - ELASTIC_CLIENT_HOST=elasticsearch
       - ELASTIC_CLIENT_PORT=9200
+
+      # - AUTH_OIDC_ENABLED=true
+      # - AUTH_OIDC_CLIENT_ID=0oapv4qs430x4BmZM1d7
+      # - AUTH_OIDC_CLIENT_SECRET=KdPU8aNs7BXDgtAv_-uRvh1lw3vlHKkePX3g4WiZxc7d-BQ3tAqNmoiLFrCOSe9f
+      # - AUTH_OIDC_DISCOVERY_URI=https://enterprisedb-1.oktapreview.com/.well-known/openid-configuration
+      # - AUTH_OIDC_BASE_URL=https://dgov-prod-awsuse1-1.edbcorp.net/
+      
     hostname: datahub-frontend-react
     image: ${DATAHUB_FRONTEND_IMAGE:-acryldata/datahub-frontend-react}:${DATAHUB_VERSION:-head}
     ports:
       - ${DATAHUB_MAPPED_FRONTEND_PORT:-9002}:9002
     volumes:
       - ${HOME}/.datahub/plugins:/etc/datahub/plugins
-      - ${HOME}/datahub_dg/user.props:/datahub-frontend/conf/user.props
+      - /opt/data/datahub-infra/user.props:/datahub-frontend/conf/user.props
 
   datahub-gms:
     depends_on:

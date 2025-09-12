@@ -6,9 +6,6 @@ owners:
 nodes:
   - name: Classification
     description: A set of terms related to Data Classification
-    knowledge_links:
-      - label: Wiki link for classification
-        url: "https://en.wikipedia.org/wiki/Classification"
     custom_properties:
       is_confidential: "true"
     terms:
@@ -28,15 +25,14 @@ nodes:
         description: Highly Confidential Data
         custom_properties:
           is_confidential: "true"
+
   - name: PersonalInformation
     description: All terms related to personal information
     owners:
       users:
-        - mjames
+        - datahub
     terms:
       - name: Email
-        ## An example of using an id to pin a term to a specific guid
-        # id: "urn:li:glossaryTerm:41516e310acbfd9076fffc2c98d2d1a3"
         description: An individual's email address
         inherits:
           - Classification.Confidential
@@ -49,6 +45,7 @@ nodes:
         description: The gender identity of the individual
         inherits:
           - Classification.Sensitive
+          
   - name: Shipping
     description: Provides terms related to the shipping domain
     owners:

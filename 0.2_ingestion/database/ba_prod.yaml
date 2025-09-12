@@ -1,0 +1,66 @@
+pipeline_name: "pg_edb"
+source:
+  type: postgres
+  config:
+    # Environment  
+    env: PROD
+
+    # Database details
+    host_port: ${BA_PROD_POSTGRES_HOST_PORT}
+    username: ${BA_PROD_POSTGRES_USERNAME}
+    database: edb_admin
+    password: ${BA_PROD_POSTGRES_PASSWORD}
+
+    # Pull info
+    schema_pattern:
+      allow:
+        - log_information
+        - reporting
+
+    include_tables: true
+    include_views: true
+
+    ## Capture data profile
+    profiling:
+      enabled: true
+      profile_table_level_only: false
+
+    stateful_ingestion:
+      enabled: true
+      remove_stale_metadata: true ## soft delete from UI with latest change            
+    
+transformers:
+  - type: "pattern_add_dataset_tags"
+    config:
+      semantics: OVERWRITE # OVERWRITE is default behaviour
+      tag_pattern:
+        rules:
+          ".*email.*": ["urn:li:tag:pii"]
+          ".*phone.*": ["urn:li:tag:pii", "urn:li:tag:sensitive"]
+          ".address.*": ["urn:li:tag:pii"]
+  
+  - type: "pattern_add_dataset_terms"
+    config:
+      term_pattern:
+        rules:
+          ".*order.*": ["urn:li:glossaryTerm:Email", "urn:li:glossaryTerm:Order"]
+          ".*customer.*": ["urn:li:glossaryTerm:Customer"]  
+  
+  - type: "pattern_add_dataset_domain"
+    config:
+      semantics: OVERWRITE # OVERWRITE is default behaviour
+      domain_pattern:
+        rules:
+          'urn:li:dataset:\(urn:li:dataPlatform:postgres,postgres\.reporting\..*': ["urn:li:domain:Analytics"]
+
+  - type: "simple_add_dataset_ownership"
+    config:
+      owner_urns:
+        - "urn:li:corpuser:DataHub"
+      ownership_type: "DATAOWNER"
+
+sink:
+  type: "datahub-rest"
+  config:
+    server: ${DATAHUB_REST_ENDPOINT}
+    token : ${DATAHUB_REST_TOKEN}

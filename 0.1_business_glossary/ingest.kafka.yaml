@@ -1,0 +1,19 @@
+source:
+  type: kafka
+  config:
+    platform_instance: "my-kafka-cluster"
+    connection:
+      bootstrap: "172.20.0.6:9092"
+      schema_registry_url: "http://172.20.0.5:8081" 
+    # The correct way to specify topics is using topic_patterns
+    topic_patterns:
+      allow:
+        - "test-topic" 
+
+sink:
+  type: "datahub-rest"
+  config:
+    disable_ssl_verification: true
+    # ca_certificate_path: "/opt/data/datahub-infra/certs/dgov-prod-awsuse1-1.edbcorp.net.crt"
+    server: ${DATAHUB_REST_ENDPOINT}
+    token : ${DATAHUB_REST_TOKEN}
